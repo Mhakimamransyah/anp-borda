@@ -552,12 +552,12 @@
         "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/mikey179/vfsStream.git",
+            "url": "https://github.com/bovigo/vfsStream.git",
             "reference": "fc0fe8f4d0b527254a2dc45f0c265567c881d07e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/fc0fe8f4d0b527254a2dc45f0c265567c881d07e",
+            "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/fc0fe8f4d0b527254a2dc45f0c265567c881d07e",
             "reference": "fc0fe8f4d0b527254a2dc45f0c265567c881d07e",
             "shasum": ""
         },
@@ -580,17 +580,17 @@
     },
     {
         "name": "nesbot/carbon",
-        "version": "1.36.1",
-        "version_normalized": "1.36.1.0",
+        "version": "1.37.1",
+        "version_normalized": "1.37.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/briannesbitt/Carbon.git",
-            "reference": "63da8cdf89d7a5efe43aabc794365f6e7b7b8983"
+            "reference": "5be4fdf97076a685b23efdedfc2b73ad0c5eab70"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/63da8cdf89d7a5efe43aabc794365f6e7b7b8983",
-            "reference": "63da8cdf89d7a5efe43aabc794365f6e7b7b8983",
+            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/5be4fdf97076a685b23efdedfc2b73ad0c5eab70",
+            "reference": "5be4fdf97076a685b23efdedfc2b73ad0c5eab70",
             "shasum": ""
         },
         "require": {
@@ -604,7 +604,7 @@
             "friendsofphp/php-cs-fixer": "Needed for the `composer phpcs` command. Allow to automatically fix code style.",
             "phpstan/phpstan": "Needed for the `composer phpstan` command. Allow to detect potential errors."
         },
-        "time": "2018-11-22T18:23:02+00:00",
+        "time": "2019-04-19T10:27:42+00:00",
         "type": "library",
         "extra": {
             "laravel": {
@@ -856,17 +856,17 @@
     },
     {
         "name": "symfony/polyfill-mbstring",
-        "version": "v1.10.0",
-        "version_normalized": "1.10.0.0",
+        "version": "v1.11.0",
+        "version_normalized": "1.11.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
+            "reference": "fe5e94c604826c35a32fa832f35bd036b6799609"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
-            "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/fe5e94c604826c35a32fa832f35bd036b6799609",
+            "reference": "fe5e94c604826c35a32fa832f35bd036b6799609",
             "shasum": ""
         },
         "require": {
@@ -875,11 +875,11 @@
         "suggest": {
             "ext-mbstring": "For best performance"
         },
-        "time": "2018-09-21T13:07:52+00:00",
+        "time": "2019-02-06T07:57:58+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.9-dev"
+                "dev-master": "1.11-dev"
             }
         },
         "installation-source": "dist",
@@ -917,17 +917,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v4.2.1",
-        "version_normalized": "4.2.1.0",
+        "version": "v4.2.8",
+        "version_normalized": "4.2.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "c0e2191e9bed845946ab3d99767513b56ca7dcd6"
+            "reference": "181a426dd129cb496f12d7e7555f6d0b37a7615b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/c0e2191e9bed845946ab3d99767513b56ca7dcd6",
-            "reference": "c0e2191e9bed845946ab3d99767513b56ca7dcd6",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/181a426dd129cb496f12d7e7555f6d0b37a7615b",
+            "reference": "181a426dd129cb496f12d7e7555f6d0b37a7615b",
             "shasum": ""
         },
         "require": {
@@ -949,7 +949,9 @@
             "symfony/console": "~3.4|~4.0",
             "symfony/dependency-injection": "~3.4|~4.0",
             "symfony/finder": "~2.8|~3.0|~4.0",
+            "symfony/http-kernel": "~3.4|~4.0",
             "symfony/intl": "~3.4|~4.0",
+            "symfony/var-dumper": "~3.4|~4.0",
             "symfony/yaml": "~3.4|~4.0"
         },
         "suggest": {
@@ -957,7 +959,7 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2018-12-06T10:45:32+00:00",
+        "time": "2019-05-01T12:55:36+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

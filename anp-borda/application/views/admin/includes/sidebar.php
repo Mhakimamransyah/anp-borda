@@ -17,31 +17,24 @@
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-                 <li>
-                    <a href="#">
+                <li>
+                    <a href="<?= base_url('admin/data-karyawan') ?>">
                         <i class="fa fa-cubes"></i> 
-                        <span class="title">Menu 1</span>
+                        <span class="title">Data Karyawan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="<?= base_url('admin/data-kriteria') ?>">
                         <i class="fa fa-cubes"></i> 
-                        <span class="title">Menu 2</span>
+                        <span class="title">Data Kriteria</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="<?= base_url('admin/perangkingan') ?>">
                         <i class="fa fa-cubes"></i> 
-                        <span class="title">Menu 3</span>
+                        <span class="title">Perangkingan</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-cubes"></i> 
-                        <span class="title">Menu 4</span>
-                    </a>
-                </li>
-                 
             </ul>
             <!-- END SIDEBAR MENU -->
         </div>
