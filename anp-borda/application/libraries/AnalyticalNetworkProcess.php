@@ -2,7 +2,7 @@
 
 class AnalyticalNetworkProcess
 {
-	private const $RANDOM_INDEX = [
+	private $RANDOM_INDEX = [
 		0.000, 0.000, 0.580, 0.900, 1.120, 
 		1.240, 1.320, 1.410, 1.450, 1.490, 
 		1.510, 1.480, 1.560, 1.570, 1.590
@@ -95,13 +95,17 @@ class AnalyticalNetworkProcess
 
 	private function calculateMaxEigenValue($mat)
 	{
+		// var_dump($mat);
 		$eigens 		= $this->calculateEigenValue($mat);
 		$sumHeights		= $this->sumHeight($mat);
 		$maxEigen 		= 0;
 		foreach ($eigens as $i => $eigen)
 		{
+			// echo $eigen . ' * ' . $sumHeights[$i] . '<br>';
 			$maxEigen += ($eigen * $sumHeights[$i]);
 		}
+		// echo 'Eigens: ' . json_encode($eigens) . '<br>';
+		// echo 'Sum Heights: ' . json_encode($sumHeights) . '<br>';
 		return $maxEigen;
 	}
 
@@ -109,6 +113,7 @@ class AnalyticalNetworkProcess
 	{
 		$n 			= count($matrix);
 		$maxEigen 	= $this->calculateMaxEigenValue($matrix);
+		// echo 'Max Eigen: ' . $maxEigen . '<br>';
 		return ($maxEigen - $n) / ($n - 1);
 	}
 
@@ -116,6 +121,11 @@ class AnalyticalNetworkProcess
 	{
 		$n = count($matrix);
 		$consistencyIndex = $this->calculateConsistencyIndex($matrix);
+		if ($n > 15)
+		{
+			$n = 15;
+		}
+		// echo 'CI: ' . $consistencyIndex . '<br>';
 		return $consistencyIndex / $this->RANDOM_INDEX[$n - 1];
 	}
 
@@ -124,12 +134,16 @@ class AnalyticalNetworkProcess
 		$n = count($criteria);
 		$matrix = $this->pairwiseComparison($criteria);
 		$cr = 0.0;
-		do
-		{
+		// $i = 0;
+		// do
+		// {
 			$matrix = $this->matrixMultiplication($matrix, $matrix);
 			$cr 	= $this->calculateConsistencyRatio($matrix);	
-		}
-		while ($cr > 0.1);
+			// $i++;
+			// echo $cr . '<br>';
+			// if ($i > 10) break;
+		// }
+		// while ($cr > 0.1);
 		
 		return $this->sumWidth($matrix);
 	}

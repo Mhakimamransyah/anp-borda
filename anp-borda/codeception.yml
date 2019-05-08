@@ -1,0 +1,31 @@
+# suite config
+suites:
+    acceptance:
+        actor: AcceptanceTester
+        path: .
+        modules:
+            enabled:
+                - WebDriver:
+                    url: http://localhost/anp-borda/anp-borda
+                    browser: chrome
+                - \Helper\Acceptance
+                
+extensions:
+    enabled: [Codeception\Extension\RunFailed]
+
+params: 
+    - env
+
+gherkin: []    
+
+# additional paths
+paths:
+    tests: application/tests
+    output: application/tests/_output
+    data: application/tests/_data
+    support: application/tests/_support
+    envs: application/tests/_envs
+
+settings:
+    shuffle: false
+    lint: true

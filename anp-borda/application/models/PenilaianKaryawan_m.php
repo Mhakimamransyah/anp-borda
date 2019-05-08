@@ -7,6 +7,7 @@ class PenilaianKaryawan_m extends Eloquent
 {
 	protected $table		= 'penilaian_karyawan';
 	protected $primaryKey	= 'id';
+	protected $fillable 	= ['id_karyawan', 'id_subkriteria', 'nilai'];
 
 	public function karyawan()
 	{

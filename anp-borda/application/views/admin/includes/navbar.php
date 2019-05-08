@@ -32,12 +32,6 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
                             <li>
-                                <a href="#">
-                                <i class="icon-user"></i> My Profile </a>
-                            </li>
-                            <li class="divider">
-                            </li>
-                            <li>
                                 <a href="<?= base_url('logout') ?>">
                                 <i class="icon-key"></i> Log Out </a>
                             </li>

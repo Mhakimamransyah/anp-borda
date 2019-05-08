@@ -24,17 +24,23 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= base_url('admin/data-divisi') ?>">
+                        <i class="fa fa-cubes"></i> 
+                        <span class="title">Data Divisi</span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= base_url('admin/data-kriteria') ?>">
                         <i class="fa fa-cubes"></i> 
                         <span class="title">Data Kriteria</span>
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="<?= base_url('admin/perangkingan') ?>">
                         <i class="fa fa-cubes"></i> 
                         <span class="title">Perangkingan</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
             <!-- END SIDEBAR MENU -->
         </div>

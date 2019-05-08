@@ -54,8 +54,8 @@ License: You must have a valid license purchased only from themeforest(the above
     <!-- BEGIN LOGO -->
     <div class="logo">
         <a href="#">
-            <h3>Sistem Pendukung Keputusan Penentu Calon Penerima Bantuan Sosial Beras Sejahtera (Bansos Rastra)</h3>
-            <h4>Desa Tanjung Muning, Sumatera Selatan</h4>
+            <h3>Sistem Pendukung Keputusan dengan Analytical Network Process - Borda</h3>
+            <h4></h4>
         </a>
     </div>
     <!-- END LOGO -->
@@ -82,7 +82,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <label class="control-label visible-ie8 visible-ie9">Password</label>
             <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" />
         </div>
-        <input type="hidden" name="login-submit" value="Login" />
+        <input type="hidden" name="submit" value="Login" />
         <div class="form-actions">
             <input type="submit" class="btn btn-primary btn-block uppercase" value="Login" />
         </div>
@@ -106,22 +106,14 @@ License: You must have a valid license purchased only from themeforest(the above
     <script src="<?= base_url('assets/metronic') ?>/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
     <!-- END CORE PLUGINS -->
     <!-- BEGIN PAGE LEVEL PLUGINS -->
-    <script src="<?= base_url('assets/metronic') ?>/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+    <!-- <script src="<?= base_url('assets/metronic') ?>/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script> -->
     <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="<?= base_url('assets/metronic') ?>/assets/global/scripts/metronic.js" type="text/javascript"></script>
     <script src="<?= base_url('assets/metronic') ?>/assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
-    <script src="<?= base_url('assets/metronic') ?>/assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
-    <script src="<?= base_url('assets/metronic') ?>/assets/admin/pages/scripts/login.js" type="text/javascript"></script>
+    <!-- <script src="<?= base_url('assets/metronic') ?>/assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
+    <script src="<?= base_url('assets/metronic') ?>/assets/admin/pages/scripts/login.js" type="text/javascript"></script> -->
     <!-- END PAGE LEVEL SCRIPTS -->
-    <script>
-    jQuery(document).ready(function() {
-        Metronic.init(); // init metronic core components
-        Layout.init(); // init current layout
-        Login.init();
-        Demo.init();
-    });
-    </script>
     <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

@@ -5,12 +5,10 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 class SpreadsheetHandler
 {
 	private $reader;
-	private $CI;
 
 	public function __construct()
 	{
 		$this->reader = new Xlsx(); 
-		$this->CI =& get_instance();
 	}
 
 	public function read($filepath)
@@ -20,13 +18,18 @@ class SpreadsheetHandler
 		return $sheet;
 	}
 
-	public function saveToDB($sheet)
+	public function serialize($sheet, $startRow = 1, $endRow = null)
 	{
 		$data 		= [];
 		$columns 	= [];
 		foreach ($sheet->getRowIterator() as $i => $row)
 		{
-			if ($i == 0)
+			if ($endRow != null && $i > $endRow)
+			{
+				break;
+			}
+
+			if ($i <= $startRow)
 			{
 				continue;
 			}
@@ -36,25 +39,13 @@ class SpreadsheetHandler
 			$j = 0;
 			foreach ($cellIterator as $cell)
 			{
-				if ($i == 1)
-				{
-					$columns []= $cell->getValue();
-				}
-				else
-				{
-					$record[$columns[$j]] = $cell->getValue();
-				}
+				$record []= $cell->getValue();
 				$j++;
 			}
 
-			unset($record['No']);
-			if ($i > 1)
-			{
-				$data []= $record;
-			}
+			$data []= $record;
 		}
 
-		$this->CI->load->model('Warga');
-		Warga::insert($data);
+		return $data;
 	}
 }
