@@ -12,7 +12,7 @@
 						</div>
 					</div>
 					<div class="portlet-body">
-						<?= form_open_multipart('admin/penilaian-karyawan/' . $id_karyawan) ?>
+						<?= form_open_multipart('decision-maker/penilaian-karyawan/' . $id_karyawan) ?>
 							<div class="form-group">
 								<label for="nik">NIK</label>
 								<input type="text" name="nik" value="<?= $karyawan->nik ?>" readonly class="form-control">

@@ -38,10 +38,10 @@ class AnalyticalNetworkProcess
 	private function matrixMultiplication($matA, $matB)
 	{
 		$heightA 	= count($matA);
-		$widthA 	= count($matA[0]);
+		$widthA 	= $matA[0] ? count($matA[0]) : 1;
 
 		$heightB 	= count($matB);
-		$widthB 	= count($matB[0]);
+		$widthB 	= $matB[0] ? count($matB[0]) : 1;
 
 		$newMatrix 	= [];
 

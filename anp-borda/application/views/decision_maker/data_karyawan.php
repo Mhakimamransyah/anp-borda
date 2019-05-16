@@ -12,18 +12,6 @@
 						</div>
 					</div>
 					<div class="portlet-body">
-						<div class="table-toolbar">
-							<div class="row">
-								<div class="col-md-5">
-									<div class="btn-group">
-			                             <a href="<?= base_url()?>admin/tambah-karyawan">
-										<button id="sample_editable_1_new" class="btn green">
-										Tambah Data Karyawan <i class="fa fa-plus"></i>
-										</button></a>
-									</div>
-								</div>
-							</div>
-						</div>
 						<table class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
@@ -46,13 +34,7 @@
 										<td><?= $row->lama_bekerja ?> Tahun</td>
 										<td><?= $row->status ?></td>
 										<td>
-											<a href="<?= base_url('admin/penilaian-karyawan/' . $row->id) ?>" class="btn btn-success btn-xs">Penilaian Karyawan</a>
-											<a href="<?= base_url('admin/edit-karyawan/' . $row->id) ?>" class="btn btn-primary btn-xs">
-												<i class="fa fa-edit"></i>
-											</a>
-											<a href="<?= base_url('admin/data-karyawan?id=' . $row->id) ?>" class="btn btn-danger btn-xs">
-												<i class="fa fa-trash"></i>
-											</a>
+											<a href="<?= base_url('decision-maker/penilaian-karyawan/' . $row->id) ?>" class="btn btn-success btn-xs">Penilaian Karyawan</a>
 										</td>
 									</tr>
 								<?php endforeach; ?>

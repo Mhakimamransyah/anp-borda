@@ -46,7 +46,7 @@
 										<td><?= $row->lama_bekerja ?> Tahun</td>
 										<td><?= $row->status ?></td>
 										<td>
-											<a href="<?= base_url('admin/penilaian-karyawan/' . $row->id) ?>" class="btn btn-success btn-xs">Penilaian Karyawan</a>
+											<!-- <a href="<?= base_url('admin/penilaian-karyawan/' . $row->id) ?>" class="btn btn-success btn-xs">Penilaian Karyawan</a> -->
 											<a href="<?= base_url('admin/edit-karyawan/' . $row->id) ?>" class="btn btn-primary btn-xs">
 												<i class="fa fa-edit"></i>
 											</a>

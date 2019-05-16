@@ -17,12 +17,13 @@
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-                <!-- <li>
+                 <li>
                     <a href="<?= base_url('decision-maker/data-karyawan') ?>">
                         <i class="fa fa-cubes"></i> 
                         <span class="title">Data Karyawan</span>
                     </a>
                 </li>
+                <!--
                 <li>
                     <a href="<?= base_url('decision-maker/data-divisi') ?>">
                         <i class="fa fa-cubes"></i> 

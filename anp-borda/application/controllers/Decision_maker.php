@@ -79,6 +79,66 @@ class Decision_maker extends MY_Controller
 		$this->template($this->data, $this->module);
 	}
 
+	public function penilaian_karyawan()
+	{
+		$this->data['id_karyawan']	= $this->uri->segment(3);
+		$this->check_allowance(!isset($this->data['id_karyawan']));
+
+		$this->load->model('PenilaianKaryawan_m');
+		$this->load->model('Subkriteria_m');
+		$this->load->model('Karyawan_m');
+		$this->data['karyawan'] = Karyawan_m::with('penilaian', 'penilaian.subkriteria', 'divisi')->find($this->data['id_karyawan']);
+		$this->check_allowance(!isset($this->data['karyawan']), ['Data karyawan dengan ID ' . $this->data['id_karyawan'] . ' tidak ditemukan', 'danger']);
+
+		if ($this->POST('submit'))
+		{
+			PenilaianKaryawan_m::where('id_karyawan', $this->data['id_karyawan'])->delete();
+			$penilaian 		= [];
+			$idSubkriteria 	= $this->POST('id_subkriteria');
+			$nilai 			= $this->POST('nilai');
+			foreach ($idSubkriteria as $i => $id)
+			{
+				$penilaian []= [
+					'id_karyawan'		=> $this->data['karyawan']->id,
+					'id_subkriteria'	=> $id,
+					'nilai'				=> $nilai[$i]
+				];
+			}
+			PenilaianKaryawan_m::insert($penilaian);
+			$this->flashmsg('Data penilaian karyawan berhasil dimasukkan');
+			redirect('decision-maker/penilaian-karyawan/' . $this->data['id_karyawan']);
+		}
+
+		$this->data['subkriteria']	= Subkriteria_m::get();
+		$this->data['title']		= 'Tambah Penilaian Karyawan';
+		$this->data['content']		= 'tambah_penilaian_karyawan';
+		$this->template($this->data, $this->module);
+	}
+
+	public function data_karyawan()
+	{
+		$this->load->model('Karyawan_m');
+		if ($this->GET('id'))
+		{
+			$karyawan = Karyawan_m::find($this->GET('id'));
+			if (isset($karyawan))
+			{
+				$karyawan->delete();
+				$this->flashmsg('Data karyawan dengan ID ' . $this->GET('id') . ' berhasil dihapus');
+			}
+			else
+			{
+				$this->flashmsg('Data karyawan dengan ID ' . $this->GET('id') . ' gagal dihapus. Data tidak ditemukan.', 'danger');
+			}
+			
+			redirect('decision-maker/data-karyawan');
+		}
+		$this->data['karyawan']	= Karyawan_m::with('divisi')->get();
+		$this->data['title']	= 'Data Karyawan';
+		$this->data['content']	= 'data_karyawan';
+		$this->template($this->data, $this->module);
+	}
+
 
 	// PRIVATE SECTION START
 
