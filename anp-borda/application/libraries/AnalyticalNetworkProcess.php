@@ -18,6 +18,12 @@ class AnalyticalNetworkProcess
 		$tables = [];
 		foreach ($criteria as $key => $value)
 		{
+			if ($value == 0)
+			{
+				$tables []= 0;
+				continue;
+			}
+
 			$row = [];
 			foreach ($criteria as $k => $v)
 			{
@@ -88,6 +94,11 @@ class AnalyticalNetworkProcess
 		$eigens 	= [];
 		foreach ($summations as $sum)
 		{
+			if ($sum == 0)
+			{
+				$eigens []= 0;
+				continue;
+			}
 			$eigens []= $sum / $total;
 		}
 		return $eigens;

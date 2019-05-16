@@ -17,6 +17,327 @@ class Admin extends MY_Controller
 		}
 	}
 
+	public function index()
+	{
+		$this->load->model('Kriteria_m');
+		$this->data['kriteria']	= Kriteria_m::get();
+
+		if ($this->POST('submit'))
+		{
+			$bobotKriteriaSistem 	= [];
+			$bobotL 				= [];
+			$bobotR 				= [];
+
+			foreach ($this->data['kriteria'] as $kriteria)
+			{
+				$bobotKriteriaSistem []= $kriteria->bobot;
+				$bobotL []= $this->POST('kriteria_l_' . $kriteria->id);
+				$bobotR []= $this->POST('kriteria_r_' . $kriteria->id);
+			}
+
+			$results[0] = $this->executeAnp($bobotKriteriaSistem);
+			$results[1] = $this->executeAnp($bobotL);
+			$results[2] = $this->executeAnp($bobotR);
+
+			$this->data['result'] = $this->executeBorda($results);
+			$bobotNormalisasi = [];
+			foreach ($this->data['result'] as $row)
+			{
+				$bobotNormalisasi []= $row->normalized_score;
+			}
+			$this->data['result'] = $this->data['result']->toArray();
+			array_multisort($bobotNormalisasi, SORT_DESC, $this->data['result']);
+		}
+
+		$this->data['title']	= 'Dashboard';
+		$this->data['content']	= 'dashboard';
+		$this->template($this->data, $this->module);
+	}
+
+	public function penilaian_karyawan()
+	{
+		$this->data['id_karyawan']	= $this->uri->segment(3);
+		$this->check_allowance(!isset($this->data['id_karyawan']));
+
+		$this->load->model('PenilaianKaryawan_m');
+		$this->load->model('Subkriteria_m');
+		$this->load->model('Karyawan_m');
+		$this->data['karyawan'] = Karyawan_m::with('penilaian', 'penilaian.subkriteria', 'divisi')->find($this->data['id_karyawan']);
+		$this->check_allowance(!isset($this->data['karyawan']), ['Data karyawan dengan ID ' . $this->data['id_karyawan'] . ' tidak ditemukan', 'danger']);
+
+		if ($this->POST('submit'))
+		{
+			PenilaianKaryawan_m::where('id_karyawan', $this->data['id_karyawan'])->delete();
+			$penilaian 		= [];
+			$idSubkriteria 	= $this->POST('id_subkriteria');
+			$nilai 			= $this->POST('nilai');
+			foreach ($idSubkriteria as $i => $id)
+			{
+				$penilaian []= [
+					'id_karyawan'		=> $this->data['karyawan']->id,
+					'id_subkriteria'	=> $id,
+					'nilai'				=> $nilai[$i]
+				];
+			}
+			PenilaianKaryawan_m::insert($penilaian);
+			$this->flashmsg('Data penilaian karyawan berhasil dimasukkan');
+			redirect('admin/penilaian-karyawan/' . $this->data['id_karyawan']);
+		}
+
+		$this->data['subkriteria']	= Subkriteria_m::get();
+		$this->data['title']		= 'Tambah Penilaian Karyawan';
+		$this->data['content']		= 'tambah_penilaian_karyawan';
+		$this->template($this->data, $this->module);
+	}
+
+	public function data_karyawan()
+	{
+		$this->load->model('Karyawan_m');
+		if ($this->GET('id'))
+		{
+			$karyawan = Karyawan_m::find($this->GET('id'));
+			if (isset($karyawan))
+			{
+				$karyawan->delete();
+				$this->flashmsg('Data karyawan dengan ID ' . $this->GET('id') . ' berhasil dihapus');
+			}
+			else
+			{
+				$this->flashmsg('Data karyawan dengan ID ' . $this->GET('id') . ' gagal dihapus. Data tidak ditemukan.', 'danger');
+			}
+			
+			redirect('admin/data-karyawan');
+		}
+		$this->data['karyawan']	= Karyawan_m::with('divisi')->get();
+		$this->data['title']	= 'Data Karyawan';
+		$this->data['content']	= 'data_karyawan';
+		$this->template($this->data, $this->module);
+	}
+
+	public function tambah_karyawan()
+	{
+		if ($this->POST('submit'))
+		{
+			$this->load->model('Karyawan_m');
+			$karyawan = new Karyawan_m();
+			$karyawan->nik 			= $this->POST('nik');
+			$karyawan->nama 		= $this->POST('nama');
+			$karyawan->id_divisi 	= $this->POST('id_divisi');
+			$karyawan->lama_bekerja = $this->POST('lama_bekerja');
+			$karyawan->status 		= $this->POST('status');
+			$karyawan->save();
+
+			$this->flashmsg('Data karyawan baru berhasil ditambahkan');
+			redirect('admin/tambah-karyawan');
+		}
+
+		$this->load->model('Divisi_m');
+		$this->data['divisi']	= Divisi_m::get();
+		$this->data['title']	= 'Form Tambah Karyawan';
+		$this->data['content']	= 'tambah_karyawan';
+		$this->template($this->data, $this->module);
+	}
+
+	public function edit_karyawan()
+	{
+		$this->data['id'] = $this->uri->segment(3);
+		$this->check_allowance(!isset($this->data['id']));
+
+		$this->load->model('Karyawan_m');
+		$this->data['karyawan'] = Karyawan_m::find($this->data['id']);
+		$this->check_allowance(!isset($this->data['karyawan']), ['Data karyawan tidak ditemukan', 'danger']);
+
+		if ($this->POST('submit'))
+		{
+			$this->data['karyawan']->nik 			= $this->POST('nik');
+			$this->data['karyawan']->nama 			= $this->POST('nama');
+			$this->data['karyawan']->id_divisi 		= $this->POST('id_divisi');
+			$this->data['karyawan']->lama_bekerja 	= $this->POST('lama_bekerja');
+			$this->data['karyawan']->status 		= $this->POST('status');
+			$this->data['karyawan']->save();
+
+			$this->flashmsg('Data karyawan berhasil di-edit');
+			redirect('admin/edit-karyawan/' . $this->data['id']);
+		}
+
+		$this->load->model('Divisi_m');
+		$this->data['divisi'] 	= Divisi_m::get();
+		$this->data['title']	= 'Form Edit Data Karyawan';
+		$this->data['content']	= 'edit_karyawan';
+		$this->template($this->data, $this->module);
+	}
+
+	public function data_divisi()
+	{
+		$this->load->model('Divisi_m');
+		if ($this->GET('id'))
+		{
+			$divisi = Divisi_m::find($this->GET('id'));
+			if (isset($divisi))
+			{
+				$divisi->delete();
+				$this->flashmsg('Data divisi dengan ID ' . $this->GET('id') . ' berhasil dihapus');
+			}
+			else
+			{
+				$this->flashmsg('Data divisi dengan ID ' . $this->GET('id') . ' gagal dihapus. Data tidak ditemukan.', 'danger');
+			}
+			
+			redirect('admin/data-divisi');
+		}
+		$this->data['divisi'] 	= Divisi_m::get();
+		$this->data['title']	= 'Data Divisi';
+		$this->data['content']	= 'data_divisi';
+		$this->template($this->data, $this->module);
+	}
+
+	public function tambah_divisi()
+	{
+		if ($this->POST('submit'))
+		{
+			$this->load->model('Divisi_m');
+			$divisi = new Divisi_m();
+			$divisi->divisi 	= $this->POST('divisi');
+			$divisi->deskripsi 	= $this->POST('deskripsi');
+			$divisi->save();
+
+			$this->flashmsg('Data divisi baru berhasil ditambahkan');
+			redirect('admin/tambah-divisi');
+		}
+
+		$this->data['title']	= 'Form Tambah Data Divisi';
+		$this->data['content']	= 'tambah_divisi';
+		$this->template($this->data, $this->module);	
+	}
+
+	public function edit_divisi()
+	{
+		$this->data['id'] = $this->uri->segment(3);
+		$this->check_allowance(!isset($this->data['id']));
+
+		$this->load->model('Divisi_m');
+		$this->data['divisi'] = Divisi_m::find($this->data['id']);
+		$this->check_allowance(!isset($this->data['divisi']), ['Data divisi tidak ditemukan', 'danger']);
+
+		if ($this->POST('submit'))
+		{
+			$this->data['divisi']->divisi = $this->POST('divisi');
+			$this->data['divisi']->deskripsi = $this->POST('deskripsi');
+			$this->data['divisi']->save();
+
+			$this->flashmsg('Data divisi berhasil di-edit');
+			redirect('admin/edit-divisi/' . $this->data['id']);
+		}
+
+		$this->data['title']	= 'Form Edit Data Divisi';
+		$this->data['content']	= 'edit_divisi';
+		$this->template($this->data, $this->module);
+	}
+
+	public function data_kriteria()
+	{
+		$this->load->model('Kriteria_m');
+		if ($this->GET('id'))
+		{
+			$kriteria = Kriteria_m::find($this->GET('id'));
+			if (isset($kriteria))
+			{
+				$kriteria->delete();
+				$this->flashmsg('Data kriteria dengan ID ' . $this->GET('id') . ' berhasil dihapus');
+			}
+			else
+			{
+				$this->flashmsg('Data kriteria dengan ID ' . $this->GET('id') . ' gagal dihapus. Data tidak ditemukan.', 'danger');
+			}
+			
+			redirect('admin/data-kriteria');
+		}
+		$this->data['kriteria']	= Kriteria_m::get();
+		$this->data['title']	= 'Data Kriteria';
+		$this->data['content']	= 'data_kriteria';
+		$this->template($this->data, $this->module);
+	}
+
+	public function tambah_kriteria()
+	{
+		if ($this->POST('submit'))
+		{
+			$this->load->model('Kriteria_m');
+			$this->load->model('Subkriteria_m');
+
+			$kriteria = new Kriteria_m();
+			$kriteria->kriteria 	= $this->POST('kriteria');
+			$kriteria->deskripsi 	= $this->POST('deskripsi');
+			$kriteria->bobot 		= $this->POST('bobot');
+			$kriteria->save();
+
+			$subkriteria = $this->POST('subkriteria');
+			foreach ($subkriteria as $row)
+			{
+				if (!empty($row))
+				{
+					$sub = new Subkriteria_m();
+					$sub->subkriteria = $row;
+					$sub->id_kriteria = $kriteria->id;
+					$sub->save();
+				}
+			}
+
+			$this->flashmsg('Kriteria baru berhasil ditambahkan');
+			redirect('admin/tambah-kriteria');
+		}
+
+		$this->data['title']	= 'Form Tambah Kriteria';
+		$this->data['content']	= 'tambah_kriteria';
+		$this->template($this->data, $this->module);
+	}
+
+	public function edit_kriteria()
+	{
+		$this->data['id'] = $this->uri->segment(3);
+		$this->check_allowance(!isset($this->data['id']));
+
+		$this->load->model('Kriteria_m');
+		$this->data['kriteria'] = Kriteria_m::with('subkriteria')->find($this->data['id']);
+		$this->check_allowance(!isset($this->data['kriteria']), ['Data kriteria tidak ditemukan', 'danger']);
+
+		if ($this->POST('submit'))
+		{
+			$this->data['kriteria']->kriteria = $this->POST('kriteria');
+			$this->data['kriteria']->deskripsi = $this->POST('deskripsi');
+			$this->data['kriteria']->bobot = $this->POST('bobot');
+			$this->data['kriteria']->save();
+
+			Subkriteria_m::where('id_kriteria', $this->data['id'])->delete();
+			$subkriteria = $this->POST('subkriteria');
+			foreach ($subkriteria as $row)
+			{
+				if (!empty($row))
+				{
+					$sub = new Subkriteria_m();
+					$sub->subkriteria = $row;
+					$sub->id_kriteria = $kriteria->id;
+					$sub->save();
+				}
+			}
+
+
+			$this->flashmsg('Data kriteria berhasil di-edit');
+			redirect('admin/edit-kriteria/' . $this->data['id']);
+		}
+
+		$this->data['title']	= 'Form Edit Data Kriteria';
+		$this->data['content']	= 'edit_kriteria';
+		$this->template($this->data, $this->module);
+	}
+
+	public function perangkingan()
+	{
+		$this->data['title']	= 'Perangkingan';
+		$this->data['content']	= 'perangkingan';
+		$this->template($this->data, $this->module);
+	}
+
 	// PRIVATE SECTION START
 
 	private function weighting($matrix, $weights)
@@ -178,248 +499,4 @@ class Admin extends MY_Controller
 	}
 
 	// PRIVATE SECTION END
-
-	public function index()
-	{
-		$this->load->model('Kriteria_m');
-		$this->data['kriteria']	= Kriteria_m::get();
-
-		if ($this->POST('submit'))
-		{
-			$bobotKriteriaSistem 	= [];
-			$bobotL 				= [];
-			$bobotR 				= [];
-
-			foreach ($this->data['kriteria'] as $kriteria)
-			{
-				$bobotKriteriaSistem []= $kriteria->bobot;
-				$bobotL []= $this->POST('kriteria_l_' . $kriteria->id);
-				$bobotR []= $this->POST('kriteria_r_' . $kriteria->id);
-			}
-
-			$results[0] = $this->executeAnp($bobotKriteriaSistem);
-			$results[1] = $this->executeAnp($bobotL);
-			$results[2] = $this->executeAnp($bobotR);
-
-			$this->data['result'] = $this->executeBorda($results);
-			$bobotNormalisasi = [];
-			foreach ($this->data['result'] as $row)
-			{
-				$bobotNormalisasi []= $row->normalized_score;
-			}
-			$this->data['result'] = $this->data['result']->toArray();
-			array_multisort($bobotNormalisasi, SORT_DESC, $this->data['result']);
-		}
-
-		$this->data['title']	= 'Dashboard';
-		$this->data['content']	= 'dashboard';
-		$this->template($this->data, $this->module);
-	}
-
-	public function penilaian_karyawan()
-	{
-		$this->data['id_karyawan']	= $this->uri->segment(3);
-		$this->check_allowance(!isset($this->data['id_karyawan']));
-
-		$this->load->model('PenilaianKaryawan_m');
-		$this->load->model('Subkriteria_m');
-		$this->load->model('Karyawan_m');
-		$this->data['karyawan'] = Karyawan_m::with('penilaian', 'penilaian.subkriteria', 'divisi')->find($this->data['id_karyawan']);
-		$this->check_allowance(!isset($this->data['karyawan']), ['Data karyawan dengan ID ' . $this->data['id_karyawan'] . ' tidak ditemukan', 'danger']);
-
-		if ($this->POST('submit'))
-		{
-			PenilaianKaryawan_m::where('id_karyawan', $this->data['id_karyawan'])->delete();
-			$penilaian 		= [];
-			$idSubkriteria 	= $this->POST('id_subkriteria');
-			$nilai 			= $this->POST('nilai');
-			foreach ($idSubkriteria as $i => $id)
-			{
-				$penilaian []= [
-					'id_karyawan'		=> $this->data['karyawan']->id,
-					'id_subkriteria'	=> $id,
-					'nilai'				=> $nilai[$i]
-				];
-			}
-			PenilaianKaryawan_m::insert($penilaian);
-			$this->flashmsg('Data penilaian karyawan berhasil dimasukkan');
-			redirect('admin/penilaian-karyawan/' . $this->data['id_karyawan']);
-		}
-
-		$this->data['subkriteria']	= Subkriteria_m::get();
-		$this->data['title']		= 'Tambah Penilaian Karyawan';
-		$this->data['content']		= 'tambah_penilaian_karyawan';
-		$this->template($this->data, $this->module);
-	}
-
-	public function data_karyawan()
-	{
-		$this->load->model('Karyawan_m');
-		if ($this->GET('id'))
-		{
-			$karyawan = Karyawan_m::find($this->GET('id'));
-			if (isset($karyawan))
-			{
-				$karyawan->delete();
-				$this->flashmsg('Data karyawan dengan ID ' . $this->GET('id') . ' berhasil dihapus');
-			}
-			else
-			{
-				$this->flashmsg('Data karyawan dengan ID ' . $this->GET('id') . ' gagal dihapus. Data tidak ditemukan.', 'danger');
-			}
-			
-			redirect('admin/data-karyawan');
-		}
-		$this->data['karyawan']	= Karyawan_m::with('divisi')->get();
-		$this->data['title']	= 'Data Karyawan';
-		$this->data['content']	= 'data_karyawan';
-		$this->template($this->data, $this->module);
-	}
-
-	public function tambah_karyawan()
-	{
-		if ($this->POST('submit'))
-		{
-			$this->load->model('Karyawan_m');
-			$karyawan = new Karyawan_m();
-			$karyawan->nik 			= $this->POST('nik');
-			$karyawan->nama 		= $this->POST('nama');
-			$karyawan->id_divisi 	= $this->POST('id_divisi');
-			$karyawan->lama_bekerja = $this->POST('lama_bekerja');
-			$karyawan->status 		= $this->POST('status');
-			$karyawan->save();
-
-			$this->flashmsg('Data karyawan baru berhasil ditambahkan');
-			redirect('admin/tambah-karyawan');
-		}
-
-		$this->load->model('Divisi_m');
-		$this->data['divisi']	= Divisi_m::get();
-		$this->data['title']	= 'Form Tambah Karyawan';
-		$this->data['content']	= 'tambah_karyawan';
-		$this->template($this->data, $this->module);
-	}
-
-	public function edit_karyawan()
-	{
-
-	}
-
-	public function data_divisi()
-	{
-		$this->load->model('Divisi_m');
-		if ($this->GET('id'))
-		{
-			$divisi = Divisi_m::find($this->GET('id'));
-			if (isset($divisi))
-			{
-				$divisi->delete();
-				$this->flashmsg('Data divisi dengan ID ' . $this->GET('id') . ' berhasil dihapus');
-			}
-			else
-			{
-				$this->flashmsg('Data divisi dengan ID ' . $this->GET('id') . ' gagal dihapus. Data tidak ditemukan.', 'danger');
-			}
-			
-			redirect('admin/data-divisi');
-		}
-		$this->data['divisi'] 	= Divisi_m::get();
-		$this->data['title']	= 'Data Divisi';
-		$this->data['content']	= 'data_divisi';
-		$this->template($this->data, $this->module);
-	}
-
-	public function tambah_divisi()
-	{
-		if ($this->POST('submit'))
-		{
-			$this->load->model('Divisi_m');
-			$divisi = new Divisi_m();
-			$divisi->divisi 	= $this->POST('divisi');
-			$divisi->deskripsi 	= $this->POST('deskripsi');
-			$divisi->save();
-
-			$this->flashmsg('Data divisi baru berhasil ditambahkan');
-			redirect('admin/tambah-divisi');
-		}
-
-		$this->data['title']	= 'Form Tambah Data Divisi';
-		$this->data['content']	= 'tambah_divisi';
-		$this->template($this->data, $this->module);	
-	}
-
-	public function edit_divisi()
-	{
-
-	}
-
-	public function data_kriteria()
-	{
-		$this->load->model('Kriteria_m');
-		if ($this->GET('id'))
-		{
-			$kriteria = Kriteria_m::find($this->GET('id'));
-			if (isset($kriteria))
-			{
-				$kriteria->delete();
-				$this->flashmsg('Data kriteria dengan ID ' . $this->GET('id') . ' berhasil dihapus');
-			}
-			else
-			{
-				$this->flashmsg('Data kriteria dengan ID ' . $this->GET('id') . ' gagal dihapus. Data tidak ditemukan.', 'danger');
-			}
-			
-			redirect('admin/data-kriteria');
-		}
-		$this->data['kriteria']	= Kriteria_m::get();
-		$this->data['title']	= 'Data Kriteria';
-		$this->data['content']	= 'data_kriteria';
-		$this->template($this->data, $this->module);
-	}
-
-	public function tambah_kriteria()
-	{
-		if ($this->POST('submit'))
-		{
-			$this->load->model('Kriteria_m');
-			$this->load->model('Subkriteria_m');
-
-			$kriteria = new Kriteria_m();
-			$kriteria->kriteria 	= $this->POST('kriteria');
-			$kriteria->deskripsi 	= $this->POST('deskripsi');
-			$kriteria->bobot 		= $this->POST('bobot');
-			$kriteria->save();
-
-			$subkriteria = $this->POST('subkriteria');
-			foreach ($subkriteria as $row)
-			{
-				if (!empty($row))
-				{
-					$sub = new Subkriteria_m();
-					$sub->subkriteria = $row;
-					$sub->id_kriteria = $kriteria->id;
-					$sub->save();
-				}
-			}
-
-			$this->flashmsg('Kriteria baru berhasil ditambahkan');
-			redirect('admin/tambah-kriteria');
-		}
-
-		$this->data['title']	= 'Form Tambah Kriteria';
-		$this->data['content']	= 'tambah_kriteria';
-		$this->template($this->data, $this->module);
-	}
-
-	public function edit_kriteria()
-	{
-		
-	}
-
-	public function perangkingan()
-	{
-		$this->data['title']	= 'Perangkingan';
-		$this->data['content']	= 'perangkingan';
-		$this->template($this->data, $this->module);
-	}
 }

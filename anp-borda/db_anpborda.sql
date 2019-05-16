@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 08 Mei 2019 pada 06.18
+-- Generation Time: 16 Mei 2019 pada 13.47
 -- Versi Server: 10.1.28-MariaDB
 -- PHP Version: 7.1.11
 
@@ -41,7 +41,7 @@ CREATE TABLE `divisi` (
 --
 
 INSERT INTO `divisi` (`id`, `divisi`, `deskripsi`, `created_at`, `updated_at`) VALUES
-(2, 'Marketing', 'Deskripsi divisi marketing', '2019-05-07 06:00:35', '2019-05-07 06:00:35'),
+(2, 'Marketing 3', 'Deskripsi divisi marketing 3', '2019-05-07 06:00:35', '2019-05-16 10:26:40'),
 (3, 'Collection', 'Deskripsi collection', '2019-05-07 06:57:56', '2019-05-07 06:57:56'),
 (4, 'Administration', 'Deskripsi administration', '2019-05-07 06:58:09', '2019-05-07 06:58:09');
 
@@ -67,7 +67,7 @@ CREATE TABLE `karyawan` (
 --
 
 INSERT INTO `karyawan` (`id`, `nik`, `nama`, `id_divisi`, `lama_bekerja`, `status`, `created_at`, `updated_at`) VALUES
-(1, '60108009', 'Iwed Alamso', 2, 3, 'Karyawan Tetap', '2019-05-07 07:50:19', '2019-05-07 07:50:19'),
+(1, '601080092', 'Iwed Alamso 2', 3, 3, 'Karyawan Kontrak', '2019-05-07 07:50:19', '2019-05-16 11:46:32'),
 (2, '600417001', 'Robbie', 3, 2, 'Karyawan Tetap', '2019-05-07 07:51:04', '2019-05-07 07:51:04'),
 (3, '61110018', 'Lenia Agustina', 4, 1, 'Karyawan Tetap', '2019-05-07 07:51:44', '2019-05-07 07:51:44'),
 (4, '60117061', 'Riska Yuliza', 4, 2, 'Karyawan Tetap', '2019-05-07 07:52:16', '2019-05-07 07:52:16'),

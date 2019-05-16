@@ -15,20 +15,38 @@
 					<div class="col-md-6 text-center">
 						<h3>Pakar 2</h3>
 					</div>
-					<?php foreach ($kriteria as $row): ?>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="kriteria_l_<?= $row->id ?>"><?= $row->kriteria ?></label>
-								<input type="number" placeholder="Masukkan bobot" required name="kriteria_l_<?= $row->id ?>" class="form-control">
+					
+							<div class="col-md-6">
+								<div class="row">
+									<?php for ($i = 0; $i < count($kriteria); $i++): ?>
+										<?php if (!in_array($kriteria[$i]->id, $excluded['l'])): ?>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="kriteria_l_<?= $kriteria[$i]->id ?>"><?= $kriteria[$i]->kriteria ?></label>
+												<input type="number" value="<?= $kriteria[$i]->bobot ?>" placeholder="Masukkan bobot" required name="kriteria_l_<?= $kriteria[$i]->id ?>" class="form-control">
+											</div>
+										</div>
+										<?php endif; ?>
+									<?php endfor; ?>
+								</div>
 							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="kriteria_r_<?= $row->id ?>"><?= $row->kriteria ?></label>
-								<input type="number" placeholder="Masukkan bobot" required name="kriteria_r_<?= $row->id ?>" class="form-control">
+						
+						
+							<div class="col-md-6">
+								<div class="row">
+									<?php for ($i = 0; $i < count($kriteria); $i++): ?>
+										<?php if (!in_array($kriteria[$i]->id, $excluded['r'])): ?>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="kriteria_r_<?= $kriteria[$i]->id ?>"><?= $kriteria[$i]->kriteria ?></label>
+												<input type="number" value="<?= $kriteria[$i]->bobot ?>" placeholder="Masukkan bobot" required name="kriteria_r_<?= $kriteria[$i]->id ?>" class="form-control">
+											</div>
+										</div>
+										<?php endif; ?>
+									<?php endfor; ?>
+								</div>
 							</div>
-						</div>
-					<?php endforeach; ?>
+						
 				</div>
 				<div class="row">
 					<div class="col-md-12">
@@ -74,7 +92,7 @@
 										<?php endforeach; ?>
 										<td><?= $row['final_score'] ?></td>
 										<td><?= $row['normalized_score'] ?></td>
-										<td><?= $i + 1 ?></td>
+										<td><?= $rank[$row['id'] . '-' . $row['nama']] ?></td>
 									</tr>
 								<?php endforeach; ?>
 							</tbody>

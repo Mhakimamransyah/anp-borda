@@ -17,6 +17,69 @@ class Decision_maker extends MY_Controller
 		}
 	}
 
+	public function index()
+	{
+		$this->load->model('Kriteria_m');
+		$this->data['kriteria']	= Kriteria_m::get();
+		$this->data['excluded'] = [
+			'l'	=> [2, 3, 4], 'r' => [5, 6, 7]
+		];
+
+		if ($this->POST('submit'))
+		{
+			$bobotKriteriaSistem 	= [];
+			$bobotL 				= [];
+			$bobotR 				= [];
+
+			foreach ($this->data['kriteria'] as $kriteria)
+			{
+				// $bobotKriteriaSistem []= $kriteria->bobot;
+				if (!in_array($kriteria->id, $this->data['excluded']['l']))
+				{
+					$bobotL []= $this->POST('kriteria_l_' . $kriteria->id);	
+				}
+				else
+				{
+					$bobotL []= 0;
+				}
+
+				if (!in_array($kriteria->id, $this->data['excluded']['r']))
+				{
+					$bobotR []= $this->POST('kriteria_r_' . $kriteria->id);	
+				}
+				else
+				{
+					$bobotR []= 0;
+				}
+			}
+
+			// $results[0] = $this->executeAnp($bobotKriteriaSistem);
+			$results[0] = $this->executeAnp($bobotL);
+			$results[1] = $this->executeAnp($bobotR);
+
+			$this->data['result'] = $this->executeBorda($results);
+			$bobotNormalisasi = [];
+			foreach ($this->data['result'] as $row)
+			{
+				$bobotNormalisasi []= $row->normalized_score;
+			}
+			$this->data['result'] 	= $this->data['result']->toArray();
+			$this->data['rank']		= [];
+			
+			$this->data['temp']		= $this->data['result'];
+			array_multisort($bobotNormalisasi, SORT_DESC, $this->data['temp']);
+			for ($i = 0; $i < count($this->data['temp']); $i++)
+			{
+				$this->data['rank'][$this->data['temp'][$i]['id'] . '-' . $this->data['temp'][$i]['nama']] = ($i + 1);
+			}
+		}
+
+		$this->data['title']	= 'Dashboard';
+		$this->data['content']	= 'dashboard';
+		$this->template($this->data, $this->module);
+	}
+
+
 	// PRIVATE SECTION START
 
 	private function weighting($matrix, $weights)
@@ -178,41 +241,4 @@ class Decision_maker extends MY_Controller
 	}
 
 	// PRIVATE SECTION END
-
-	public function index()
-	{
-		$this->load->model('Kriteria_m');
-		$this->data['kriteria']	= Kriteria_m::get();
-
-		if ($this->POST('submit'))
-		{
-			$bobotKriteriaSistem 	= [];
-			$bobotL 				= [];
-			$bobotR 				= [];
-
-			foreach ($this->data['kriteria'] as $kriteria)
-			{
-				$bobotKriteriaSistem []= $kriteria->bobot;
-				$bobotL []= $this->POST('kriteria_l_' . $kriteria->id);
-				$bobotR []= $this->POST('kriteria_r_' . $kriteria->id);
-			}
-
-			$results[0] = $this->executeAnp($bobotKriteriaSistem);
-			$results[1] = $this->executeAnp($bobotL);
-			$results[2] = $this->executeAnp($bobotR);
-
-			$this->data['result'] = $this->executeBorda($results);
-			$bobotNormalisasi = [];
-			foreach ($this->data['result'] as $row)
-			{
-				$bobotNormalisasi []= $row->normalized_score;
-			}
-			$this->data['result'] = $this->data['result']->toArray();
-			array_multisort($bobotNormalisasi, SORT_DESC, $this->data['result']);
-		}
-
-		$this->data['title']	= 'Dashboard';
-		$this->data['content']	= 'dashboard';
-		$this->template($this->data, $this->module);
-	}
 }
