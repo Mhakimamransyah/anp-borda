@@ -19,6 +19,7 @@ class Login extends MY_Controller
 					break;
 
 				case 2:
+				case 3:
 					redirect('decision-maker');
 					break;
 			}
@@ -32,7 +33,8 @@ class Login extends MY_Controller
   		if ($this->POST('submit'))
 		{
 			$this->load->model('Pengguna_m');
-			$pengguna = Pengguna_m::where('username', $this->POST('username'))
+			$pengguna = Pengguna_m::has('role')
+							->where('username', $this->POST('username'))
 							->where('password', md5($this->POST('password')))
 							->first();
 			if (!isset($pengguna)) 
@@ -44,6 +46,7 @@ class Login extends MY_Controller
 				$_SESSION['id_pengguna']	= $pengguna->id;
 				$_SESSION['username']		= $pengguna->username;
 				$_SESSION['id_role']		= $pengguna->id_role;
+				$_SESSION['role']			= $pengguna->role->role;
 			}
 			redirect('login');
 		}

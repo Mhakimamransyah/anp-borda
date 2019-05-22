@@ -15,6 +15,8 @@ class Decision_maker extends MY_Controller
 			$this->session->sess_destroy();
 			redirect('login');
 		}
+
+		$this->data['role'] = $this->session->userdata('role');
 	}
 
 	public function index()
@@ -81,6 +83,18 @@ class Decision_maker extends MY_Controller
 
 	public function penilaian_karyawan()
 	{
+		$kriteria = [];
+		switch ($this->data['role'])
+		{
+			case 'Manager':
+				$kriteria = [5, 6, 7];
+				break;
+
+			case 'Kepala Cabang':
+				$kriteria = [2, 3, 4];
+				break;
+		}
+
 		$this->data['id_karyawan']	= $this->uri->segment(3);
 		$this->check_allowance(!isset($this->data['id_karyawan']));
 
@@ -90,9 +104,14 @@ class Decision_maker extends MY_Controller
 		$this->data['karyawan'] = Karyawan_m::with('penilaian', 'penilaian.subkriteria', 'divisi')->find($this->data['id_karyawan']);
 		$this->check_allowance(!isset($this->data['karyawan']), ['Data karyawan dengan ID ' . $this->data['id_karyawan'] . ' tidak ditemukan', 'danger']);
 
+		$this->data['subkriteria']	= Subkriteria_m::whereIn('id_kriteria', $kriteria)->get();
+
 		if ($this->POST('submit'))
 		{
-			PenilaianKaryawan_m::where('id_karyawan', $this->data['id_karyawan'])->delete();
+			PenilaianKaryawan_m::where('id_karyawan', $this->data['id_karyawan'])
+							->whereIn('id_subkriteria', array_column($this->data['subkriteria']->toArray(), 'id'))
+							->delete();
+
 			$penilaian 		= [];
 			$idSubkriteria 	= $this->POST('id_subkriteria');
 			$nilai 			= $this->POST('nilai');
@@ -109,7 +128,7 @@ class Decision_maker extends MY_Controller
 			redirect('decision-maker/penilaian-karyawan/' . $this->data['id_karyawan']);
 		}
 
-		$this->data['subkriteria']	= Subkriteria_m::get();
+		
 		$this->data['title']		= 'Tambah Penilaian Karyawan';
 		$this->data['content']		= 'tambah_penilaian_karyawan';
 		$this->template($this->data, $this->module);

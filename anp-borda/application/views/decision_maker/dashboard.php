@@ -10,10 +10,10 @@
 			<?= form_open('decision-maker') ?>
 				<div class="row">
 					<div class="col-md-6 text-center">
-						<h3>Pakar 1</h3>
+						<h3>Manager</h3>
 					</div>
 					<div class="col-md-6 text-center">
-						<h3>Pakar 2</h3>
+						<h3>Kepala Cabang</h3>
 					</div>
 					
 							<div class="col-md-6">

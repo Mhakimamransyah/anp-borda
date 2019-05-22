@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 16 Mei 2019 pada 13.47
+-- Generation Time: 22 Mei 2019 pada 07.37
 -- Versi Server: 10.1.28-MariaDB
 -- PHP Version: 7.1.11
 
@@ -167,7 +167,9 @@ CREATE TABLE `pengguna` (
 
 INSERT INTO `pengguna` (`id`, `username`, `password`, `id_role`, `nama`, `created_at`, `updated_at`) VALUES
 (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, 'Paulina Hutabarat', '2019-05-07 09:28:46', '2019-05-07 15:08:48'),
-(2, 'pakar', 'e10adc3949ba59abbe56e057f20f883e', 2, 'Paulina Hutabarat', '2019-05-07 09:28:46', '2019-05-07 15:08:48');
+(2, 'pakar', 'e10adc3949ba59abbe56e057f20f883e', 2, 'Paulina Hutabarat', '2019-05-07 09:28:46', '2019-05-07 15:08:48'),
+(5, 'manager', 'e10adc3949ba59abbe56e057f20f883e', 2, 'Manager', '2019-05-22 04:50:29', '2019-05-22 04:50:29'),
+(6, 'kepala_cabang', 'e10adc3949ba59abbe56e057f20f883e', 3, 'Kepala Cabang', '2019-05-22 04:50:29', '2019-05-22 04:50:29');
 
 -- --------------------------------------------------------
 
@@ -195,12 +197,6 @@ INSERT INTO `penilaian_karyawan` (`id`, `id_karyawan`, `id_subkriteria`, `nilai`
 (64, 1, 6, 2, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
 (65, 1, 7, 2, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
 (66, 1, 8, 3, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
-(67, 1, 9, 2, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
-(68, 1, 10, 3, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
-(69, 1, 11, 1, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
-(70, 1, 12, 2, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
-(71, 1, 13, 3, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
-(72, 1, 14, 2, '2019-05-07 07:50:48', '2019-05-07 07:50:48'),
 (73, 2, 3, 3, '2019-05-07 07:51:28', '2019-05-07 07:51:28'),
 (74, 2, 4, 3, '2019-05-07 07:51:28', '2019-05-07 07:51:28'),
 (75, 2, 5, 2, '2019-05-07 07:51:28', '2019-05-07 07:51:28'),
@@ -788,7 +784,13 @@ INSERT INTO `penilaian_karyawan` (`id`, `id_karyawan`, `id_subkriteria`, `nilai`
 (657, 50, 11, 5, '2019-05-07 08:20:34', '2019-05-07 08:20:34'),
 (658, 50, 12, 5, '2019-05-07 08:20:34', '2019-05-07 08:20:34'),
 (659, 50, 13, 3, '2019-05-07 08:20:34', '2019-05-07 08:20:34'),
-(660, 50, 14, 4, '2019-05-07 08:20:34', '2019-05-07 08:20:34');
+(660, 50, 14, 4, '2019-05-07 08:20:34', '2019-05-07 08:20:34'),
+(661, 1, 9, 3, '2019-05-22 05:36:36', '2019-05-22 05:36:36'),
+(662, 1, 10, 2, '2019-05-22 05:36:36', '2019-05-22 05:36:36'),
+(663, 1, 11, 1, '2019-05-22 05:36:36', '2019-05-22 05:36:36'),
+(664, 1, 12, 2, '2019-05-22 05:36:36', '2019-05-22 05:36:36'),
+(665, 1, 13, 2, '2019-05-22 05:36:36', '2019-05-22 05:36:36'),
+(666, 1, 14, 3, '2019-05-22 05:36:36', '2019-05-22 05:36:36');
 
 -- --------------------------------------------------------
 
@@ -809,7 +811,8 @@ CREATE TABLE `role` (
 
 INSERT INTO `role` (`id`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'Admin', '2019-05-07 09:22:21', '2019-05-07 09:22:21'),
-(2, 'Decision Maker', '2019-05-07 09:22:21', '2019-05-07 09:22:21');
+(2, 'Manager', '2019-05-07 09:22:21', '2019-05-22 04:48:39'),
+(3, 'Kepala Cabang', '2019-05-22 04:48:53', '2019-05-22 04:48:53');
 
 -- --------------------------------------------------------
 
@@ -920,19 +923,19 @@ ALTER TABLE `kriteria`
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `penilaian_karyawan`
 --
 ALTER TABLE `penilaian_karyawan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=661;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=667;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `subkriteria`

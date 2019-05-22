@@ -8,10 +8,10 @@ class Pengguna_m extends Eloquent
 	protected $table		= 'pengguna';
 	protected $primaryKey	= 'id';
 
-	public function subkriteria()
+	public function role()
 	{
 		require_once __DIR__ . '/Role_m.php';
-		return $this->hasMany('Role_m', 'id_role', 'id');
+		return $this->hasOne('Role_m', 'id', 'id_role');
 	}
 
 }
