@@ -48,6 +48,7 @@ class Login extends MY_Controller
 				$_SESSION['id_role']		= $pengguna->id_role;
 				$_SESSION['role']			= $pengguna->role->role;
 			}
+
 			redirect('login');
 		}
 		$this->data['title']  = 'Login';

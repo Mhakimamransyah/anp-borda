@@ -28,7 +28,12 @@
 							<?php foreach ($subkriteria as $i => $row): ?>
 								<div class="form-group">
 									<label for="subkriteria">Subkriteria <?= $row->subkriteria ?></label>
-									<input placeholder="Masukkan nilai" type="number" value="<?= isset($karyawan->penilaian[$i]) ? $karyawan->penilaian[$i]->nilai : '' ?>" id="nilai_<?= $i ?>" name="nilai[]" class="form-control" required>
+									<select id="nilai_<?= $i ?>" name="nilai[]" class="form-control" required>
+										<?php for ($j = 0; $j < 5; $j++): ?>
+											<option <?= isset($karyawan->penilaian[$i]) && $karyawan->penilaian[$i]->nilai == $j + 1 ? 'selected' : '' ?> value="<?= $j + 1 ?>"><?= $j + 1 ?></option>
+										<?php endfor; ?>
+									</select>
+									<!-- <input placeholder="Masukkan nilai" max="5" type="number" value="<?= isset($karyawan->penilaian[$i]) ? $karyawan->penilaian[$i]->nilai : '' ?>" id="nilai_<?= $i ?>" name="nilai[]" class="form-control" required> -->
 									<input type="hidden" name="id_subkriteria[]" value="<?= $row->id ?>">
 								</div>
 							<?php endforeach; ?>

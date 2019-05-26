@@ -10,7 +10,8 @@ class Decision_maker extends MY_Controller
 		$id_pengguna	= $this->session->userdata('id_pengguna');
 	    $username 		= $this->session->userdata('username');
 	    $id_role		= $this->session->userdata('id_role');
-		if (!isset($id_pengguna, $username, $id_role) or $id_role != 2)
+	    $this->data['id_role'] = $id_role;
+		if (!isset($id_pengguna, $username, $id_role) or ($id_role != 2 && $id_role != 3))
 		{
 			$this->session->sess_destroy();
 			redirect('login');
@@ -56,8 +57,8 @@ class Decision_maker extends MY_Controller
 			}
 
 			// $results[0] = $this->executeAnp($bobotKriteriaSistem);
-			$results[0] = $this->executeAnp($bobotL);
-			$results[1] = $this->executeAnp($bobotR);
+			$results[0] = $this->executeAnp($bobotL); // manager
+			$results[1] = $this->executeAnp($bobotR); // kepala cabang
 
 			$this->data['result'] = $this->executeBorda($results);
 			$bobotNormalisasi = [];
