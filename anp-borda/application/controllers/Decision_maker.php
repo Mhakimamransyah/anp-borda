@@ -75,6 +75,22 @@ class Decision_maker extends MY_Controller
 			{
 				$this->data['rank'][$this->data['temp'][$i]['id'] . '-' . $this->data['temp'][$i]['nama']] = ($i + 1);
 			}
+
+			$this->data['top_ranks'] = [];
+			foreach ($this->data['temp'] as $employee)
+			{
+				if (count($this->data['top_ranks']) >= 3)
+				{
+					break;
+				}
+
+				$keys = array_keys($this->data['top_ranks']);
+				if (!in_array($employee['id_divisi'], $keys))
+				{
+					$this->data['top_ranks'][$employee['id_divisi']] = $employee;
+				}
+			}
+
 		}
 
 		$this->data['title']	= 'Dashboard';
